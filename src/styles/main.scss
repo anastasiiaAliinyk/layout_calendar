@@ -1,3 +1,76 @@
+$font-primary: arial, helvetica, sans-serif;
+$font-size : 30px;
+$cell-size : 100px;
+
+$monthes: (31,30,29);
+$days: ("mon": 0, "tue": 1, "wed": 2, "thu": 3, "fri": 4, "sat": 5, "sun": 6);
+
+%cell {
+  width: $cell-size;
+  height: $cell-size;
+  margin: 0 1px 1px 0;
+
+  font-family: $font-primary;
+  font-size: $font-size;
+  text-align: center;
+
+  background-color: #eee;
+  border: 1px solid black;
+}
+
+%animation {
+  cursor: pointer;
+  background-color: pink;
+  position: relative;
+
+  z-index: 1;
+  transform: translateY(-20px);
+  transition: background-color 0.5s, transform 0.5s;
+}
+
+%box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 body {
   margin: 0;
+  box-sizing: border-box;
+  @extend %box;
+}
+
+.calendar {
+  display: flex;
+  width: 721px;
+  flex-wrap: wrap;
+  line-height: $cell-size;
+}
+
+.calendar > div {
+  @extend %cell;
+  display: none;
+  &:hover {
+    @extend %animation;
+  }
+}
+
+@each $month in $monthes {
+  .calendar-#{$month} {
+    @for $i from 1 through $month {
+      & :nth-child(#{$i}) {
+        display: block;
+        &::after {
+          content: "#{$i}";
+        }
+      }
+    }
+  }
+}
+
+@each $day,$padding in $days {
+  .calendar-#{$day} :nth-child(1) {
+    margin-left: 103px * $padding;
+  }
 }
